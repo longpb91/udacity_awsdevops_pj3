@@ -234,7 +234,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: [ "be:d4:83:31:38:af:13:2b:f7:26:fa:76:58:ca:4a:94" ]
+          fingerprints: [ "41:27:11:71:09:63:c6:76:31:1b:72:e6:73:29:dc:54" ]
       - attach_workspace:
           at: ~/
       - run:
@@ -488,8 +488,8 @@ workflows:
           filters:
             branches:
               only: [master]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
       # - run-migrations:
       #     requires: [configure-infrastructure]
       # - deploy-frontend:
