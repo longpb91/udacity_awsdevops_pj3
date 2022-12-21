@@ -1,0 +1,7 @@
+URL01=https://github.com/Manhhoangvp95/project-3-devops-udacity
+URL02=http://udapeople-99ab245.s3-website-us-east-1.amazonaws.com/#/employees
+URL_cloudfront=https://d32p7a1zz6ghww.cloudfront.net/#/employees
+
+## Note
+I can't setup cloudfront to see the data like as s3. Can you please give me a hint for this. Thanks
+
