@@ -264,10 +264,10 @@ jobs:
       - restore_cache:
           keys: [backend-build]
       - run:
-        name: Install dependencies
-        command: |
-          apt-get update
-          apt -y install awscli
+          name: Install dependencies
+          command: |
+            apt-get update
+            apt -y install awscli
       - run:
           name: Run migrations
           command: |
