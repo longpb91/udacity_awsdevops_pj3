@@ -265,11 +265,6 @@ jobs:
           at: ~/
       - restore_cache:
           keys: [backend-build]
-      # - run:
-      #     name: Install dependencies
-      #     command: |
-      #       sudo apt-get update
-      #       sudo apt -y install awscli
       - run:
           name: Run migrations
           command: |
@@ -289,6 +284,7 @@ jobs:
       # Here's where you will add some code to rollback on failure
       - revert-migrations:
             workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - destroy-environment
 
   deploy-frontend:
     docker:
