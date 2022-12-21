@@ -249,6 +249,7 @@ jobs:
           name: Configure server
           command: |
             cat .circleci/ansible/inventory.txt
+            ssh -v git@github.com
             export ANSIBLE_HOST_KEY_CHECKING=False
             ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/configure-server.yml
       - destroy-environment:
