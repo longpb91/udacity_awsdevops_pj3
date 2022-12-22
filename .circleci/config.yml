@@ -485,10 +485,13 @@ jobs:
               echo Stack names: "${STACKS[@]}"
               if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
               then
+                echo "-------------------- Delete Confirmed --------------------"
                 echo "Deleting stacks with Old Worflow ID: ${OldWorkflowID}"
                 aws s3 rm s3://udapeople-${OldWorkflowID} --recursive
                 aws cloudformation delete-stack --stack-name backend-${OldWorkflowID}
                 aws cloudformation delete-stack --stack-name frontend-${OldWorkflowID}
+              else
+                echo "--------------------- Cannot Cleanup ---------------------"
               fi
 
 workflows:
