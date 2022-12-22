@@ -411,7 +411,7 @@ jobs:
             echo http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/
             echo "------------------------------------"
 
-            if curl -s http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/ | grep "Wlcome"
+            if curl -s http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/ | grep "Welcome"
             then
               echo "Frontend Smoke Test Success"
               return 0
@@ -421,6 +421,55 @@ jobs:
             fi
       
       # Here's where you will add some code to rollback on failure 
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+
+  cloudfront-update:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      # Checkout code from git
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update tar gzip ansible nodejs npm curl
+            pip install awscli
+      - run:
+          name: Get old workflow ID
+          command: |
+            export OLD_WORKFLOW_ID=$(aws cloudformation list-exports \
+              --query "Exports[?Name==\`WorkflowID\`].Value" \
+              --no-paginate \
+              --output text)
+
+            export STACKS=$(aws cloudformation list-stacks \
+              --query "StackSummaries[*].StackName" \
+              --stack-status-filter CREATE_COMPLETE \
+              --no-paginate \
+              --output text)
+
+            curl https://kvdb.io/NriCGECNGYQ6yTF4VAjbBj//workflowid -d "${OLD_WORKFLOW_ID}" 
+
+            echo Old Workflow Id: ${OLD_WORKFLOW_ID} >> ~/Old_workflow_ID.txt
+            cat ~/Old_workflow_ID.txt
+            echo Actual Workflow Id: ${CIRCLE_WORKFLOW_ID:0:7}
+            echo Stacks available: ${STACKS}
+      - run:
+          name: Update cloudfront distribution
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/cloudfront.yml \
+              --stack-name InitialStack \
+              --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
+              --tags project=udapeople
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - Old_workflow_ID.txt
+      # Here's where you will add some code to rollback on failure
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations:
@@ -454,7 +503,7 @@ workflows:
           requires: [run-migrations]
       - smoke-test:
           requires: [deploy-backend, deploy-frontend]
-      # - cloudfront-update:
-      #     requires: [smoke-test]
+      - cloudfront-update:
+          requires: [smoke-test]
       # - cleanup:
       #     requires: [cloudfront-update]
