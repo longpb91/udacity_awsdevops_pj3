@@ -476,6 +476,11 @@ jobs:
       steps:
         # Checkout code from git
         - checkout
+        - run:
+          name: Install dependencies
+          command: |
+            yum install -y gcc-c++ make 
+            yum -y install tar gzip
         - attach_workspace:
             at: ~/ 
         - run:
