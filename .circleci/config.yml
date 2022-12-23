@@ -7,6 +7,7 @@ commands:
     parameters:
       workflow_id:
         type: "string"
+        
     steps:
       - run:
           name: Destroy environments
@@ -218,7 +219,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ["41:27:11:71:09:63:c6:76:31:1b:72:e6:73:29:dc:54"]
+          fingerprints: ["b7:62:97:a0:49:d3:64:c9:20:1d:49:64:6c:32:53:64"]
       - attach_workspace:
           at: ~/
       - run:
@@ -350,7 +351,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ["41:27:11:71:09:63:c6:76:31:1b:72:e6:73:29:dc:54"]
+          fingerprints: ["b7:62:97:a0:49:d3:64:c9:20:1d:49:64:6c:32:53:64"]
       - attach_workspace:
           at: ~/
       - run:
