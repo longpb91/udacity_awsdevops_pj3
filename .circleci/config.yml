@@ -449,9 +449,11 @@ jobs:
               --no-paginate --output text)
             export STACKS=$(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
               --stack-status-filter CREATE_COMPLETE --no-paginate --output text)
-            curl https://kvdb.io/7sWJ3tiSH6uQPhq3PGcyMi/workflowid-${CIRCLE_WORKFLOW_ID:0:7} -d "${OLD_WORKFLOW_ID}" --insecure
-            export OldWorkflowID_test=$(curl https://kvdb.io/7sWJ3tiSH6uQPhq3PGcyMi/workflowid-${CIRCLE_WORKFLOW_ID:0:7} --insecure)
-            echo Old Workflow Id Test: ${OldWorkflowID_test}
+            echo $OLD_WORKFLOW_ID >> ~/OldWorkflowID.txt
+
+            echo Old Workflow Id Test:
+            cat ~/OldWorkflowID.txt
+            echo "-----------------"
             echo Old Workflow Id: ${OLD_WORKFLOW_ID}
             echo Actual Workflow Id: ${CIRCLE_WORKFLOW_ID:0:7}
             echo Stacks available: ${STACKS}
@@ -464,6 +466,10 @@ jobs:
               --stack-name InitialStack \
               --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
               --tags project=udapeople
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - OldWorkflowID.txt
      
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
@@ -478,10 +484,17 @@ jobs:
         # Checkout code from git
         - checkout
         - run:
+            name: Install dependencies
+            command: |
+              yum install -y gcc-c++ make 
+              yum -y install tar gzip
+        - attach_workspace:
+            at: ~/ 
+        - run:
             name: Remove old stacks and files
             command: |
               # Get OldWorkflowID
-              export OldWorkflowID=$(curl https://kvdb.io/7sWJ3tiSH6uQPhq3PGcyMi/workflowid-${CIRCLE_WORKFLOW_ID:0:7} --insecure)
+              export OldWorkflowID=$(cat ~/OldWorkflowID.txt)
               # Fetch the stack names          
               export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
                 --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
