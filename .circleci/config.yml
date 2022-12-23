@@ -7,7 +7,7 @@ commands:
     parameters:
       workflow_id:
         type: "string"
-        
+
     steps:
       - run:
           name: Destroy environments
@@ -491,6 +491,7 @@ jobs:
               yum -y install tar gzip
         - attach_workspace:
             at: ~/ 
+            
         - run:
             name: Remove old stacks and files
             command: |
