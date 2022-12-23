@@ -449,7 +449,9 @@ jobs:
               --no-paginate --output text)
             export STACKS=$(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
               --stack-status-filter CREATE_COMPLETE --no-paginate --output text)
-            curl https://kvdb.io/7sWJ3tiSH6uQPhq3PGcyMi/workflowid -d "${OLD_WORKFLOW_ID}" --insecure
+            curl https://kvdb.io/7sWJ3tiSH6uQPhq3PGcyMi/workflowid-${CIRCLE_WORKFLOW_ID:0:7} -d "${OLD_WORKFLOW_ID}" --insecure
+            export OldWorkflowID_test=$(curl https://kvdb.io/7sWJ3tiSH6uQPhq3PGcyMi/workflowid-${CIRCLE_WORKFLOW_ID:0:7} --insecure)
+            echo Old Workflow Id Test: ${OldWorkflowID_test}
             echo Old Workflow Id: ${OLD_WORKFLOW_ID}
             echo Actual Workflow Id: ${CIRCLE_WORKFLOW_ID:0:7}
             echo Stacks available: ${STACKS}
@@ -479,7 +481,7 @@ jobs:
             name: Remove old stacks and files
             command: |
               # Get OldWorkflowID
-              export OldWorkflowID=$(curl https://kvdb.io/7sWJ3tiSH6uQPhq3PGcyMi/workflowid --insecure)
+              export OldWorkflowID=$(curl https://kvdb.io/7sWJ3tiSH6uQPhq3PGcyMi/workflowid-${CIRCLE_WORKFLOW_ID:0:7} --insecure)
               # Fetch the stack names          
               export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
                 --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
