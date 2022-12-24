@@ -362,6 +362,7 @@ jobs:
             sudo add-apt-repository --yes --update ppa:ansible/ansible
             sudo apt install ansible
             pip install awscli
+            
       - run:
           name: Deploy backend
           command: |
@@ -491,7 +492,7 @@ jobs:
               yum -y install tar gzip
         - attach_workspace:
             at: ~/ 
-            
+
         - run:
             name: Remove old stacks and files
             command: |
