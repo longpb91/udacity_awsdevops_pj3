@@ -1,2 +1,2 @@
 [URL01] https://github.com/longpb91/udacity_awsdevops_pj3
-[URL02] http://udapeople-7db8f3f.s3-website-us-east-1.amazonaws.com/#/employees
+[URL02] http://udapeople-56180ee.s3-website-us-east-1.amazonaws.com/#/employees
