@@ -219,7 +219,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ["41:27:11:71:09:63:c6:76:31:1b:72:e6:73:29:dc:54"]
+          fingerprints: ["cd:1f:34:8c:ae:2a:07:0b:c5:d0:8f:67:64:d9:ad:f7"]
       - attach_workspace:
           at: ~/
       - run:
@@ -318,6 +318,7 @@ jobs:
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --output text)
+            echo IP_BACKEND: $BACKEND_IP
             echo "NODE_ENV=production" >> frontend/.env
             export API_URL="http://${BACKEND_IP}:3030"
             echo "API_URL=${API_URL}" >> frontend/.env
@@ -351,7 +352,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ["41:27:11:71:09:63:c6:76:31:1b:72:e6:73:29:dc:54"]
+          fingerprints: ["cd:1f:34:8c:ae:2a:07:0b:c5:d0:8f:67:64:d9:ad:f7"]
       - attach_workspace:
           at: ~/
       - run:
@@ -362,7 +363,7 @@ jobs:
             sudo add-apt-repository --yes --update ppa:ansible/ansible
             sudo apt install ansible
             pip install awscli
-            
+
       - run:
           name: Deploy backend
           command: |
